@@ -85,3 +85,115 @@ if ( ! empty( $_FILES['identity_doc'] ) ) {
     }
 }
 # end web_lover for identity_doc file
+
+
+/**
+     *
+     * @author web_lover
+     * @package this is a wordPress function that will help
+     * to upload file to specific folder and validate that file
+     *
+     */
+
+    function wl_upload_document($file_input_name)
+    {
+
+        require_once(ABSPATH . 'wp-admin/includes/image.php');
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/media.php');
+        
+        $folder_name = "wl_documents";
+        $file_data = $_FILES[$file_input_name];
+
+        // Get the uploaded file information
+        $file = $_FILES[$file_input_name];
+
+        $upload_dir = wp_upload_dir(); // get default upload directory
+        $custom_dir = $upload_dir['basedir'] . '/' . $folder_name.'/'; // create custom directory
+
+        if ( ! file_exists( $custom_dir ) ) {
+            wp_mkdir_p( $custom_dir ); // create custom directory if it doesn't exist
+        }
+    
+        $filename = basename($file['name']); // Get the filename
+        $file_tmp_name = ($file['tmp_name']); 
+
+        $file_extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION)); // Get the file extension
+        $unique_name = uniqid() . '.' . $file_extension;
+
+        $file_path = $custom_dir . $unique_name; // Define file path
+       
+
+        // Set the allowed mime types
+        $allowed_mime_types = array(
+            'image/jpeg',
+            'image/png',
+            'application/pdf'
+        );
+
+        // Check if the uploaded file's mime type is allowed
+        if (!in_array($file['type'], $allowed_mime_types)) {
+
+            $res = array(
+                'is_uplaod' => false,
+                'file_data' => 'Invalid file type.'
+            );
+
+            return $res;
+        }
+
+        $move_res = move_uploaded_file($file_tmp_name, $file_path);
+
+        $file_access_url = $upload_dir['baseurl'].'/'.$folder_name.'/'.$unique_name;
+
+        $res = array(
+            'is_uplaod' => true,
+            'file_data' => $file_access_url,
+        );
+
+        return $res;
+
+    }
+
+    # end web_lover for file upload
+
+
+    /**
+     *
+     * @author web_lover
+     * @package cheeck the current url and allow my custom document to admin only
+     *
+     */
+
+    # Remember we can not restrict a img to open on get request
+    # we may do restrict by htaccess but checking user role their
+    # will be too hard So leave it ... There is not a way to do in php becausse the img / file
+    # is not processing with php so we can not do a condition check there
+
+     function web_lover_admin_can_view_only_custom_documents(){
+        
+        $url = home_url( $_SERVER['REQUEST_URI'] );
+
+
+        // $url = "https://example.com/wp-content/uploads/2022/02/image.jpg";
+
+        $wl_folder_name = "wl_documents";
+
+        $parsed_url = parse_url($url);
+        $path = $parsed_url['path'];
+
+        if (strpos($path, $wl_folder_name) !== false) {
+
+            // Only allow admins to upload files to the custom directory
+            if( ! current_user_can( 'administrator' ) ) {
+                echo  $url;
+                wp_die('You are not Allowed to access this file');
+            }
+
+        }
+
+    }
+
+    add_action('parse_request', 'web_lover_admin_can_view_only_custom_documents', 20);
+
+    # end web_lover restrict our document
