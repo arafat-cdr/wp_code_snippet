@@ -1,6 +1,4 @@
-> ### This is Help to Rapid Develop WordPress Theme and Plugins
-
-> #### Wordpress Mine Plugin develop Template Code
+> ### Wordpress Mine Plugin develop Template Code
 
 ```php
 <?php
@@ -18,11 +16,11 @@ define('PLUGIN_CONSTANT',__FILE__);
 // includes
 include( 'includes/call_back_func_1.php' );
 
-//Hooks
+// hooks
 add_action( 'plugins_loaded', 'arafat_load_textdomain' );
 
 
-//Shortcodes
+// shortcodes
 add_shortcode( 'my_cusotom_code', 'func_to_call' );
 
 ```

@@ -1,21 +1,21 @@
 <?php
 
-//prevent direct access it is asecurity issue
+// prevent direct access it is asecurity issue
 if ( !function_exists( 'add_action' ) ) { 
 	echo 'Direct Access Not Allowed';
 	exit;
 }
 
-//setup
+// setup
 define('PLUGIN_CONSTANT',__FILE__);
 
 
-//Includes
+// includes
 include( 'includes/call_back_func_1.php' );
 
-//Hooks
+// hooks
 add_action( 'plugins_loaded', 'arafat_load_textdomain' );
 
 
-//Shortcodes
+// shortcodes
 add_shortcode( 'my_cusotom_code', 'func_to_call' );
