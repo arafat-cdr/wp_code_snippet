@@ -144,3 +144,53 @@ pr( $url_arr );
 $base_url_only = $url_arr['scheme'].'://'.$url_arr['host'].$url_arr['path'];
 
 ```
+
+
+### Php var_export
+    
+    * The var_export() function outputs or returns structured information about a variable.
+    * If set to true, it returns the variable representation instead of outputting it
+    * This function works similar to var_dump(), except that the returned value for this function is valid PHP code.
+
+### Code
+```php
+// Code
+<?php
+$array = array(
+    'name' => 'John',
+    'age' => 30,
+    'city' => 'New York'
+);
+
+$exported_array = var_export($array, true);
+
+echo "Original Array:\n";
+print_r($array);
+
+echo "\nExported Array:\n$exported_array\n";
+
+
+```
+
+### Result
+
+```php
+
+Original Array:
+Array
+(
+    [name] => John
+    [age] => 30
+    [city] => New York
+)
+
+Exported Array:
+array (
+  'name' => 'John',
+  'age' => 30,
+  'city' => 'New York',
+)
+
+
+
+```
